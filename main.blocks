@@ -1,0 +1,79 @@
+<xml xmlns="https://developers.google.com/blockly/xml"><variables></variables><comment id="WEH*cfxtwX]7,[fi/$/a" x="828" y="-50" w="480" h="120">
+radio.setGroup(2); // Set the radio group (channel) to 2
+</comment><comment id=")Q:vUgeyTB`bEJ`y97+(" x="1353" y="-50" w="480" h="120">
+function move(direction: ArrowNames, action: () =&gt; void) {
+</comment><comment id=")$0X:+Rn[SvfFl5AdVRu" x="1878" y="-50" w="270" h="120">
+basic.showArrow(direction);
+</comment><comment id="4F7X2lDvz~!([~@r3!aH" x="2193" y="-50" w="180" h="120">
+basic.pause(1000);
+</comment><comment id="jhNciBx|fNB{|8D+0}x|" x="-34" y="451" w="200" h="120">
+basic.clearScreen();
+</comment><comment id="eHz8jF|4Q)cGe}]B2z($" x="211" y="451" w="160" h="120">
+action();
+</comment><comment id="eM9k+r7:su%0?BgCib%-" x="416" y="451" w="160" h="120">
+}
+</comment><comment id="RrIbiWvdu$)fv1FRLXjU" x="621" y="451" w="230" h="120">
+function stopMotors() {
+</comment><comment id="sGVS~L{]q-N}vIhWJwaK" x="896" y="451" w="330" h="120">
+motion.stop(); // Stop the motors
+</comment><comment id="Da|7sC5Pna_ebUVZ(cgt" x="1271" y="451" w="480" h="120">
+Optional: If your motor controller supports it, stop motors explicitly
+</comment><comment id="RKzq~J6P$b*`qm^!JvL?" x="1796" y="451" w="350" h="120">
+motorA.setPower(0); // Stop motor A
+</comment><comment id=":Uwa1!r^+.1Brwh1$nfq" x="2191" y="451" w="350" h="120">
+motorB.setPower(0); // Stop motor B
+</comment><comment id="%ReGrIVX!lv8ir%6M|)D" x="-34" y="616" w="160" h="120">
+}
+</comment><comment id="tHLEJr+wIifEh%a`s}S," x="171" y="616" w="480" h="120">
+radio.onReceivedString(function (receivedString) {
+</comment><comment id="Yt8EfTK4_#={og.:fl2^" x="696" y="616" w="320" h="120">
+if (receivedString == "drive") {
+</comment><comment id="EUO:a!S*=$U/=w9n1ATH" x="1061" y="616" w="300" h="120">
+move(ArrowNames.North, () =&gt; {
+</comment><comment id="QLpt@8!m[EXQi81sY+A2" x="1406" y="616" w="240" h="120">
+motion.driveStraight(1);
+</comment><comment id="j%ubQrkX{5-?cN@PI4[m" x="1691" y="616" w="470" h="120">
+basic.pause(2000); // Adjust duration as needed
+</comment><comment id="Ge9:zY;Ez7YQOpY6)3=S" x="2206" y="616" w="480" h="120">
+stopMotors(); // Stop after driving for a specific duration
+</comment><comment id="2$%QvnPa)*E1_i(-zca*" x="-34" y="781" w="160" h="120">
+});
+</comment><comment id="*x]Y7l/(moYkU.?ibdvE" x="171" y="781" w="370" h="120">
+} else if (receivedString == "end") {
+</comment><comment id="3{hAjx`yk#]7BGHbl~Hp" x="586" y="781" w="290" h="120">
+basic.showIcon(IconNames.No);
+</comment><comment id="e0br9gDSk0+QrBq/I$gK" x="921" y="781" w="180" h="120">
+basic.pause(1000);
+</comment><comment id="]q6iFX@rA;1TWjlv4*1e" x="1146" y="781" w="200" h="120">
+basic.clearScreen();
+</comment><comment id=".Ym~:D*n*tfpTR36%QHp" x="1391" y="781" w="480" h="120">
+stopMotors(); // Ensure motors are fully stopped
+</comment><comment id="olO|S.]Y|7/0]T$Qb6t*" x="1916" y="781" w="430" h="120">
+} else if (receivedString == "move_left") {
+</comment><comment id="v9]t$hSWiL_@K9L7NY!k" x="-34" y="946" w="290" h="120">
+move(ArrowNames.West, () =&gt; {
+</comment><comment id="zDX5~iF;=wKpgVnd%k_," x="301" y="946" w="210" h="120">
+motion.turnLeft(100);
+</comment><comment id="2@XiBY*K:s9}nr5`E27c" x="556" y="946" w="410" h="120">
+basic.pause(1000); // Pause while turning
+</comment><comment id="S)Wmp;UdH@3n7fFT|(7K" x="1011" y="946" w="480" h="120">
+stopMotors(); // Ensure motors are fully stopped after turning left
+</comment><comment id="rOX+RZc$fBCGeK-5AG/T" x="1536" y="946" w="160" h="120">
+});
+</comment><comment id="Xvz0F0*XoV,*,`zzWh^M" x="1741" y="946" w="440" h="120">
+} else if (receivedString == "move_right") {
+</comment><comment id="1c9$ljkxpn,Ic)EK+!?v" x="-34" y="1111" w="290" h="120">
+move(ArrowNames.East, () =&gt; {
+</comment><comment id="L9X$Dc!Vn`bt%)n=]t~." x="301" y="1111" w="220" h="120">
+motion.turnRight(100);
+</comment><comment id="|ojh{2iNx4M$5}d1|!qX" x="566" y="1111" w="410" h="120">
+basic.pause(1000); // Pause while turning
+</comment><comment id="c@%QN;dG{Efn}pa8M(45" x="1021" y="1111" w="480" h="120">
+stopMotors(); // Ensure motors are fully stopped after turning right
+</comment><comment id="$@xN#43qwe!,.pG=+4p{" x="1546" y="1111" w="160" h="120">
+});
+</comment><comment id="tQbW2So=JV|43Xh^S.#J" x="1751" y="1111" w="160" h="120">
+}
+</comment><comment id="h,|k8u{RwrhI?%yL)f01" x="1956" y="1111" w="160" h="120">
+});
+</comment><block type="function_definition" id="/6`5{Ub+i`=a+^z84.!`" x="0" y="0"><mutation name="stopMotors" functionid="MVHn:#t%$:r=]!`MemP("></mutation><field name="function_name">stopMotors</field></block></xml>
