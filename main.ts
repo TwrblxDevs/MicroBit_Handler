@@ -1,11 +1,36 @@
-function stopMotors() {
+radio.onReceivedString(function (command) {
+    if (command == "Left") {
+        motion.turnLeft(50)
+        basic.pause(500)
+        motion.stop()
+    } else if (command == "Right") {
+        motion.turnRight(50)
+        basic.pause(500)
+        motion.stop()
+    } else if (command == "Backward") {
+        motion.driveStraight(-50)
+        basic.pause(500)
+        motion.stop()
+    } else if (command == "Forward") {
+        motion.driveStraight(50)
+        basic.pause(500)
+        motion.stop()
+    } else {
+        motion.stop()
+    }
+})
+function stopMotors () {
     console.log("Motors stopping...");
-    motion.stop();
+    servos.setLeftServoPosition(Position.UP)
+motion.stop()
 }
-
-let soundPlayed = false;
-let StartupPlayed = false;
-
+function checkForErrors () {
+    runSafely(() => PlaySound("Startup"), "PlaySound");
+runSafely(() => stopMotors(), "stopMotors");
+runSafely(() => move(ArrowNames.North, () => console.log("Moved North")), "move");
+}
+let StartupPlayed = false
+let soundPlayed = false
 function PlaySound(Sound: any) {
     console.log("PlaySound called with argument: " + Sound);
 
@@ -76,7 +101,6 @@ function PlaySound(Sound: any) {
         basic.clearScreen();
     }
 }
-
 function move(direction: ArrowNames, action: () => void) {
     console.log("Moving in direction: " + direction);
     basic.showArrow(direction);
@@ -84,7 +108,6 @@ function move(direction: ArrowNames, action: () => void) {
     basic.clearScreen();
     action();
 }
-
 function runSafely(fn: any, fnName = "anonymous") {
     try {
         console.log(`Running function: ${fnName}`);
@@ -94,16 +117,8 @@ function runSafely(fn: any, fnName = "anonymous") {
         console.error(`Error in function ${fnName}: ${error.message}`);
     }
 }
-
-function checkForErrors() {
-    runSafely(() => PlaySound("Startup"), "PlaySound");
-    runSafely(() => stopMotors(), "stopMotors");
-    runSafely(() => move(ArrowNames.North, () => console.log("Moved North")), "move");
-}
-
-checkForErrors();
-
+checkForErrors()
 runSafely(() => {
     console.log("Setting radio group to 2...");
-    radio.setGroup(2);
+    radio.setGroup(3);
 }, "Setting radio group");
