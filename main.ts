@@ -1,36 +1,58 @@
+let idleTimeout = 10000; // 5 seconds of idle time
+let lastCommandTime = input.runningTime(); // Time of the last command
+let idleMode = false; // Track if we're in idle mode
+
 radio.onReceivedString(function (command) {
+    lastCommandTime = input.runningTime(); // Reset the last command time
+    idleMode = false; // Reset idle mode
+
     if (command == "Left") {
-        motion.turnLeft(50)
-        basic.pause(500)
-        motion.stop()
+        basic.showArrow(ArrowNames.East);
+        motion.turnLeft(50);
+        basic.pause(500);
+        motion.stop();
+        basic.clearScreen();
     } else if (command == "Right") {
-        motion.turnRight(50)
-        basic.pause(500)
-        motion.stop()
+        basic.showArrow(ArrowNames.West);
+        motion.turnRight(50);
+        basic.pause(500);
+        motion.stop();
+        basic.clearScreen();
     } else if (command == "Backward") {
-        motion.driveStraight(-50)
-        basic.pause(500)
-        motion.stop()
+        basic.showArrow(ArrowNames.South);
+        motion.driveStraight(-50);
+        basic.pause(500);
+        motion.stop();
+        basic.clearScreen();
     } else if (command == "Forward") {
-        motion.driveStraight(50)
-        basic.pause(500)
-        motion.stop()
+        basic.showArrow(ArrowNames.North);
+        motion.driveStraight(50);
+        basic.pause(500);
+        motion.stop();
+        basic.clearScreen();
     } else {
-        motion.stop()
+        motion.stop();
     }
-})
-function stopMotors () {
+});
+
+// Function for stopping the motors safely
+function stopMotors() {
     console.log("Motors stopping...");
-    servos.setLeftServoPosition(Position.UP)
-motion.stop()
+    servos.setLeftServoPosition(Position.UP);
+    motion.stop();
 }
-function checkForErrors () {
+
+// Safety and startup checks
+function checkForErrors() {
     runSafely(() => PlaySound("Startup"), "PlaySound");
-runSafely(() => stopMotors(), "stopMotors");
-runSafely(() => move(ArrowNames.North, () => console.log("Moved North")), "move");
+    runSafely(() => stopMotors(), "stopMotors");
+    runSafely(() => move(ArrowNames.North, () => console.log("Moved North")), "move");
 }
-let StartupPlayed = false
-let soundPlayed = false
+
+// Function for playing sounds
+let StartupPlayed = false;
+let soundPlayed = false;
+
 function PlaySound(Sound: any) {
     console.log("PlaySound called with argument: " + Sound);
 
@@ -101,6 +123,8 @@ function PlaySound(Sound: any) {
         basic.clearScreen();
     }
 }
+
+// Function for movement with direction and action
 function move(direction: ArrowNames, action: () => void) {
     console.log("Moving in direction: " + direction);
     basic.showArrow(direction);
@@ -108,6 +132,7 @@ function move(direction: ArrowNames, action: () => void) {
     basic.clearScreen();
     action();
 }
+
 function runSafely(fn: any, fnName = "anonymous") {
     try {
         console.log(`Running function: ${fnName}`);
@@ -117,8 +142,60 @@ function runSafely(fn: any, fnName = "anonymous") {
         console.error(`Error in function ${fnName}: ${error.message}`);
     }
 }
-checkForErrors()
+
+function playIdleAnimation() {
+    if (!idleMode) {
+        console.log("Entering idle mode, playing cool tune...");
+        music.beginMelody(music.builtInMelody(Melodies.Entertainer), MelodyOptions.OnceInBackground);
+        idleMode = true;
+    }
+
+    basic.showLeds(`
+        . # # # .
+        # . . . #
+        # . . . #
+        # . . . #
+        . # # # .
+    `);
+    basic.pause(200);
+    basic.showLeds(`
+        # # # # #
+        # . . . #
+        # . . . #
+        # . . . #
+        # # # # #
+    `);
+    basic.pause(200);
+    basic.showLeds(`
+        . # # # .
+        # . . . #
+        # # . # #
+        # . . . #
+        . # # # .
+    `);
+    basic.pause(200);
+    basic.showLeds(`
+        . . # . .
+        . # . # .
+        # . . . #
+        . # . # .
+        . . # . .
+    `);
+    basic.pause(200);
+    basic.clearScreen();
+}
+
+basic.forever(function () {
+    if (input.runningTime() - lastCommandTime > idleTimeout) {
+        playIdleAnimation();
+    } else {
+        idleMode = false;
+    }
+});
+
+checkForErrors();
+
 runSafely(() => {
-    console.log("Setting radio group to 2...");
-    radio.setGroup(3);
+    console.log("Setting radio group to 4...");
+    radio.setGroup(4);
 }, "Setting radio group");
